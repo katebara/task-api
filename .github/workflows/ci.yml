@@ -1,0 +1,44 @@
+name: CI
+
+# Runs on every push and every pull request targeting main.
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-lint-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+      # 1. Get the code
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # 2. Set up the runtime
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      # 3. Install dependencies (app + dev tools)
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      # 4. Lint - fail the build on style/syntax problems
+      - name: Lint with flake8
+        run: flake8 app tests run.py
+
+      # 5. Check formatting - fail the build if black would reformat anything
+      - name: Check formatting with black
+        run: black --check app tests run.py
+
+      # 6. Run the automated test suite
+      - name: Run tests with pytest
+        run: pytest -v
