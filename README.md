@@ -1,4 +1,4 @@
- ![CI](https://github.com/katebara/task-api/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/katebara/task-api/actions/workflows/ci.yml/badge.svg)
 # Task Manager API
 
 A small Flask REST API for managing tasks, built as a CI/CD practice
